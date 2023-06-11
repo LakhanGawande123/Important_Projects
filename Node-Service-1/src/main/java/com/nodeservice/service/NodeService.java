@@ -7,12 +7,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nodeservice.model.Node;
 import com.nodeservice.model.Status;
 import com.nodeservice.model.repository.NodeRepository;
+import com.nodeservice.response.NodeResponse;
 
 @Service
 public class NodeService {
@@ -20,14 +22,21 @@ public class NodeService {
 	private static final long EXPIRE_TOKEN_AFTER_MINUTES = 30;
 	
 	@Autowired
+	private ModelMapper modelMapper;
+	
+	@Autowired
 	private NodeRepository nodeRepository;
 	
 	//Add Node with DATE & STATUS
-	public Node addNode(Node node) {
-		Date date =new Date();
+	public NodeResponse addNode(Node node) {
+		Date date = new Date();
 		node.setTime(date);
+		node.setRealm("Consumer");
 		node.setStatus(Status.PENDING);
-		return nodeRepository.save(node);
+		Node node1 = nodeRepository.save(node);
+		NodeResponse nodeResponse = modelMapper.map(node1, NodeResponse.class);
+
+		return nodeResponse;
 	}
 	
 	//Get list of node
@@ -38,6 +47,10 @@ public class NodeService {
 	//Get specific node by id
 	public Optional<Node> getSingleNode(UUID id) {
 		return nodeRepository.findById(id);
+	}
+	
+	public Node getByEmail(String email) {
+		return nodeRepository.findByEmail(email);
 	}
 	
 	// Update Specific fields
@@ -102,6 +115,10 @@ public class NodeService {
 		Duration diff = Duration.between(tokenCreationDate, now);
 
 		return diff.toMinutes() >= EXPIRE_TOKEN_AFTER_MINUTES;
+	}
+	
+	public void deleteNode(UUID id) {
+		nodeRepository.deleteById(id);
 	}
 	
 	

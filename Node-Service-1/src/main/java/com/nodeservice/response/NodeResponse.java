@@ -1,15 +1,12 @@
-package com.nodeservice.model;
-
+package com.nodeservice.response;
 
 import java.util.Date;
 import java.util.UUID;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
-//import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -18,84 +15,38 @@ import javax.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
-import org.springframework.beans.factory.annotation.Value;
 
-import com.fasterxml.jackson.annotation.JsonFilter;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.nodeservice.model.Status;
 
-//import jakarta.persistence.Entity;
-//import jakarta.persistence.EnumType;
-//import jakarta.persistence.Enumerated;
-//import jakarta.persistence.GeneratedValue;
-//import jakarta.persistence.GenerationType;
-//import jakarta.persistence.Id;
-//import jakarta.persistence.Temporal;
-//import jakarta.persistence.TemporalType;
-//import jakarta.transaction.Status;
-import lombok.Data;
+public class NodeResponse {
 
+	private UUID id;
 
-@Entity
-@Data
-//@JsonFilter("NodeFilter")
-//@JsonFilter("dynamicfilter")
-public class Node {
-	
-	@Id
-	@GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Type(type = "org.hibernate.type.UUIDCharType")
-    private UUID id;
-	
-	@Column(nullable = false, length = 50, unique = true)
-	@NotBlank(message = "Username cannot be blank")
 	private String username;
-	
-	@Column(nullable = false, length = 50)
-	@NotBlank(message = "NodeType cannot be blank")
+
 	private String nodeType;
-	
-	@Column(nullable = false, length = 10, unique = true)
+
 	private String phone;
-	
-	@Column(nullable = false, length = 50)
+
 	private String district;
-	
-	@Column(nullable = false, length = 50)
+
 	private String pincode;
-	
-	@Column(nullable = false, length = 50)
+
 	private String city;
-	
-	@Column(nullable = false, length = 50)
+
 	private String state;
-	
-	
-	
-	@Column(unique = true)
+
 	private String email;
-	
+
 	private String password;
-	
+
 	private String token;
-	
-	@Transient
-	//@JsonIgnore 
 
 	private String realm;
-	
-	
-	
-	@Temporal(value=TemporalType.TIMESTAMP)
-    private Date time;
-	
-	@Enumerated(EnumType.STRING)
-    private Status status;
-	
-	//@Type(JsonType.class)
-    //@Column(columnDefinition = "JSON")
-	//@JsonDeserialize(using = VericalDeserializer.class)
-	//private Vertical properties;
+
+	private Date time;
+
+	private Status status;
 
 	public UUID getId() {
 		return id;
@@ -211,10 +162,12 @@ public class Node {
 
 	@Override
 	public String toString() {
-		return "Node [id=" + id + ", username=" + username + ", nodeType=" + nodeType + ", phone=" + phone
+		return "NodeResponse [id=" + id + ", username=" + username + ", nodeType=" + nodeType + ", phone=" + phone
 				+ ", district=" + district + ", pincode=" + pincode + ", city=" + city + ", state=" + state + ", email="
 				+ email + ", password=" + password + ", token=" + token + ", realm=" + realm + ", time=" + time
 				+ ", status=" + status + "]";
 	}
 	
+	
+
 }
