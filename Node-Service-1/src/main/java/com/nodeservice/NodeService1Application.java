@@ -11,6 +11,8 @@ public class NodeService1Application {
 
 	public static void main(String[] args) {
 		SpringApplication.run(NodeService1Application.class, args);
+		
+		System.out.println(">>>>>>>>>> Start......");
 	}
 	
 	@Bean
