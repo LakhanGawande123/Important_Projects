@@ -1,0 +1,21 @@
+package com.example.demo.repository;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import com.example.demo.model.User;
+
+@Repository
+public interface UserRepository extends JpaRepository<User, Long> {
+
+	@Query(value = "SELECT list FROM User as list" + "WHERE (:username is null or list.username = :username)"
+			+ "AND (fname is null or list.fname = :fname)" + "AND (lname is null or list.lname = :lname)"
+			+ "AND (age is null or list.age = :age)")
+	public List<User> findByUsernameAndFnameAndLnameAndAge(@Param("username") String username,
+			@Param("fname") String fname, @Param("lname") String lname, @Param("age") String age);
+
+}
