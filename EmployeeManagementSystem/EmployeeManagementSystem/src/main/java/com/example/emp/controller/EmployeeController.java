@@ -52,6 +52,13 @@ public class EmployeeController {
 		return employee;
 	}
 	
+	
+	@GetMapping("/getSingleEmployee/{city}")
+	public Employee getEmployee(@PathVariable("city") String city) {
+		Employee employee = employeeService.getEmployeeByCity(city);
+		return employee;
+	}
+	
 	@GetMapping("/getEmployee/{name}/{salary}/{age}/{department}")
 	public ResponseEntity<Employee> getEmployeeByNameSalaryAgeDepartment(@PathVariable("name") String name,
 			@PathVariable("salary") Double salary, @PathVariable("age") String age, @PathVariable("department") String department) {

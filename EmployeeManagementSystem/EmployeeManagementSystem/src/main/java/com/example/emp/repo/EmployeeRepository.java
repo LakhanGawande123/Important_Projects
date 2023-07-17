@@ -36,4 +36,10 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer>{
 	@Modifying
 	@Query("delete from Employee where name = :name AND eid = :eid")
 	void deleteEmployeesByNameAndEid(@Param("name") String name, @Param("eid") int eid);
+	
+	// Get Employee data by using another class fields
+	@Query("SELECT e FROM Employee e " + "WHERE function('JSON_EXTRACT', e.address, '$.city') = :city")
+	public Employee findByAddressCity(@Param("city") String city);
+	
+	
 }

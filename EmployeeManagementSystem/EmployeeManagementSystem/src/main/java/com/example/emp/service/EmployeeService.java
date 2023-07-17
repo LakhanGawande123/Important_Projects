@@ -61,6 +61,13 @@ public class EmployeeService {
 		return employee;
 	}
 	
+	public Employee getEmployeeByCity(String city) {
+		
+		Employee empInfo = employeeRepository.findByAddressCity(city);
+
+		return empInfo;
+	}
+	
 	public Employee getEmployeeByName_Salary_Age_Department(String name, Double salary, String age, String department) throws EmployeeNotFoundException {
 		
 		Employee empInfo = employeeRepository.findByNameAndSalaryAndAgeAndDepartment(name, salary, age, department);
