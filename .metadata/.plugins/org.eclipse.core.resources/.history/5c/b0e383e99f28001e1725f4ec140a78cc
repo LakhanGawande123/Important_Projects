@@ -1,0 +1,63 @@
+package com.example.demo.user.controller;
+
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
+
+import com.example.demo.user.model.Post;
+import com.example.demo.user.model.Product;
+import com.example.demo.user.model.User;
+import com.example.demo.user.repo.ProductRepository;
+import com.example.demo.user.service.ProductService;
+
+@RestController
+@RequestMapping("/product")
+public class ProductController {
+	
+	@Autowired
+	private ProductRepository productRepository;
+	
+	@Autowired
+	private ProductService productService;
+	
+	@Autowired
+	private RestTemplate restTemplate;
+	
+	@PostMapping
+    public String addProduct(@RequestBody Product productRequest) {
+
+        long productId = productService.addProduct(productRequest);
+        return "Product Id:"+productId;
+    }
+	 
+	@GetMapping("/p/{Id}")
+	public User get(@PathVariable("Id") long productId) {
+
+		User userOne = new User(userId, "User Name" + userId, "xxxxxx" + userId);
+
+		Post post1 = restTemplate.getForObject("http://localhost:9002/post/1", Post.class);
+		userOne.setPost(post1);
+
+		return userOne;
+
+	}
+	
+	
+	@GetMapping("/{id}")
+    public Optional<Product> getProductById(@PathVariable("id") long productId) {
+
+		Optional<Product> productResponse = productService.getProductById(productId);
+		return productResponse;
+    }
+
+
+}
