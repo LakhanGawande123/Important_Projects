@@ -1,5 +1,0 @@
-package com.example.demo.user.payload.request;
-
-public class ProductRequest {
-
-}
