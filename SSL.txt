@@ -1,0 +1,24 @@
+
+### SSL URL ###
+https://localhost:8443/demo
+https://localhost:8443/swagger-ui.html#/
+
+
+### SSL keytool CMD Command ###
+C:\Users\user>d:
+
+D:\>mkdir SSL
+
+D:\>cd SSL
+
+keytool -genkey -alias selfsigned -storetype PKCS12 -keyalg RSA -keysize 2048 
+-keystore mykeystore.jks -validity 365
+
+### Application.Property ###
+server.ssl.key-alias=selfsigned
+server.ssl.key-store-type=PKCS12
+server.ssl.key-store=classpath:mykeystore.jks
+server.ssl.key-store-password=pass123
+server.port=8443
+
+
