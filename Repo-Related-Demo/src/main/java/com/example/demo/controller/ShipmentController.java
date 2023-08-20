@@ -24,10 +24,10 @@ public class ShipmentController {
 			Shipment ship = shipmentRepo.save(shipment);
 			return new ResponseEntity<Shipment>(ship, HttpStatus.CREATED);
 		}
-		else if (type.equals("get")) {
-			Shipment ship = shipmentRepo.findByType(type);
-			return new ResponseEntity<Shipment>(HttpStatus.OK);
-		}
+//		else if (type.equals("get")) {
+//			Shipment ship = shipmentRepo.findByType(type);
+//			return new ResponseEntity<Shipment>(HttpStatus.OK);
+//		}
 		else if (type.equals("delete")) {
 			 int status = shipmentRepo.deleteShipmentByType(type);
 			return new ResponseEntity<Shipment>(HttpStatus.NO_CONTENT);
