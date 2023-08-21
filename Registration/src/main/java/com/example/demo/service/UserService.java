@@ -14,5 +14,7 @@ public interface UserService {
     public ResponseEntity<?> saveUserDemo(User user);
     
     public User getLoginData(String userName, String userPassword)throws UserNotFoundException;
+    
+   
 
 }

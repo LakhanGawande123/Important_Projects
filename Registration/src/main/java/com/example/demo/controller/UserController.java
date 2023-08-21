@@ -2,8 +2,6 @@ package com.example.demo.controller;
 
 import java.util.List;
 
-import javax.transaction.Status;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.config.TwilioSmsSender;
 import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
@@ -24,6 +23,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    
+    @Autowired
+    private TwilioSmsSender smsService;
     
     @Autowired
 	private UserRepository userRepository;
@@ -64,5 +66,10 @@ public class UserController {
 		User user = userService.getLoginData(userName, userPassword);
 		return ResponseEntity.ok(user);
 	}
+    
+    @PostMapping("/sms")
+    public void sendSms( @RequestBody User user) {
+        smsService.sendSms(user);
+    }
     
 }

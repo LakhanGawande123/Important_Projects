@@ -1,5 +1,7 @@
 package com.example.demo.service.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
@@ -7,12 +9,17 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.config.TwilioConfiguration;
+import com.example.demo.config.TwilioSmsSender;
 import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.model.ConfirmationToken;
 import com.example.demo.model.User;
 import com.example.demo.repository.ConfirmationTokenRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
+import com.twilio.rest.api.v2010.account.Message;
+import com.twilio.rest.api.v2010.account.MessageCreator;
+import com.twilio.type.PhoneNumber;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -26,13 +33,16 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	EmailService emailService;
 	
-	//@Autowired
     PasswordEncoder passwordEncoder;
     
-    
-    public UserServiceImpl(UserRepository userRepository) {
+    private static final Logger LOGGER = LoggerFactory.getLogger(TwilioSmsSender.class);
+
+    private final TwilioConfiguration twilioConfiguration;
+
+    public UserServiceImpl(UserRepository userRepository, TwilioConfiguration twilioConfiguration) {
     	this.userRepository=userRepository;
     	this.passwordEncoder = new BCryptPasswordEncoder();
+    	this.twilioConfiguration = twilioConfiguration;
     }
 
 	@Override
@@ -76,6 +86,10 @@ public class UserServiceImpl implements UserService {
 		return ResponseEntity.badRequest().body("Error: Couldn't verify email");
 	}
 	
+	
+	/* 
+		User register at a time send successful registration on email and sms (Mobile) 
+	*/ 
 	@Override
 	public ResponseEntity<?> saveUserDemo(User user) {
 
@@ -86,18 +100,37 @@ public class UserServiceImpl implements UserService {
 		String encodedPassword = this.passwordEncoder.encode(user.getUserPassword());
 		user.setUserPassword(encodedPassword);
 		userRepository.save(user);
-
+		
+		//email sending code
 		SimpleMailMessage mailMessage = new SimpleMailMessage();
 		mailMessage.setTo(user.getUserEmail());
 		mailMessage.setSubject("Complete Registration!");
-		
 		//String encoded = new BCryptPasswordEncoder().encode(user.getUserPassword());
 		mailMessage.setText("User Name: "+ user.getUserName()+",  Password: "+user.getUserPassword());
 		emailService.sendEmail(mailMessage);
-
-
+		
+		//sms sending code
+		if (isPhoneNumberValid(user.getMobnumber())) {
+            PhoneNumber to = new PhoneNumber(user.getMobnumber());
+            PhoneNumber from = new PhoneNumber(twilioConfiguration.getTrialNumber());
+            String message = "User Registration Successful "+" "+"Username:"+user.getUserName()+", Password"+user.getUserPassword();
+            MessageCreator creator = Message.creator(to, from, message);
+            creator.create();
+            LOGGER.info("Send sms {}", user);
+        } else {
+            throw new IllegalArgumentException(
+                    "Phone number [" + user.getMobnumber() + "] is not a valid number"
+            );
+        }
+		
 		return ResponseEntity.ok(">>>>>>>> Success <<<<<<<<<");
 	}
+	
+	private boolean isPhoneNumberValid(String mobnumber) {
+        // TODO: Implement phone number validator
+        return true;
+    }
+
 	
 	@Override
 	public User getLoginData(String userName, String userPassword) throws UserNotFoundException {

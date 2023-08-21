@@ -20,17 +20,20 @@ public class User {
 	private String userEmail;
 
 	private String userPassword;
+	
+	private String mobnumber;
 
 	private boolean isEnabled;
 
 	public User() {
     }
 
-    public User(Long userid, String userName, String userEmail, String userPassword, boolean isEnabled) {
+    public User(Long userid, String userName, String userEmail, String userPassword, String mobnumber, boolean isEnabled) {
         this.userid = userid;
         this.userName = userName;
         this.userEmail = userEmail;
         this.userPassword = userPassword;
+        this.mobnumber = mobnumber;
         this.isEnabled = isEnabled;
     }
 
@@ -50,10 +53,11 @@ public class User {
         this.userName = userName;
     }
 
-    public User(String userName, String userEmail, String userPassword, boolean isEnabled) {
+    public User(String userName, String userEmail, String userPassword, String mobnumber, boolean isEnabled) {
         this.userName = userName;
         this.userEmail = userEmail;
         this.userPassword = userPassword;
+        this.mobnumber = mobnumber;
         this.isEnabled = isEnabled;
     }
 
@@ -80,4 +84,22 @@ public class User {
     public void setEnabled(boolean enabled) {
         isEnabled = enabled;
     }
+
+	public Long getUserid() {
+		return userid;
+	}
+
+	public void setUserid(Long userid) {
+		this.userid = userid;
+	}
+
+	public String getMobnumber() {
+		return mobnumber;
+	}
+
+	public void setMobnumber(String mobnumber) {
+		this.mobnumber = mobnumber;
+	}
+    
+    
 }

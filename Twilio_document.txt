@@ -1,0 +1,6 @@
+
+
+Account SID = AC790472640f5f82cdb03d4cb11ccfb2ea
+Auth Token = ae984d0230bfcd29e841ed50822225b4
+Phone Number = +12518424674
+		+12518424674
