@@ -37,39 +37,39 @@ public class UserService {
 	}
 	
 	
-	public ResponseEntity<?> saveUser3(User user) {
-
-        if (userRepository.existsByEmail(user.getEmail())) {
-            return ResponseEntity.badRequest().body("Error: Email is already in use!");
-        }
-
-        User response = userRepository.save(user);
-        
-        if (userRepository.existsByEmail(null)) {
-            
-			SimpleMailMessage msg = new SimpleMailMessage();
-			//ResponseEntity<User> result = userService.getUser(user.getId());
-			//System.out.println(">>>> Result "+ result);
-	        msg.setTo(user.getEmail());
-
-	        msg.setSubject("Username Testing from Spring Boot");
-	        msg.setText("To confirm your account, Your Username : "+user.getUsername());
-	       // ResponseEntity<User>  = userService.saveUser(response);
-	        
-	        //return new ResponseEntity(result, HttpStatus.OK);
-        }
-		return new ResponseEntity(response, HttpStatus.OK);
-        
-        
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(user.getEmail());
-        mailMessage.setSubject("Complete Registration!");
-        mailMessage.setText("To confirm your account, please click here : "
-                +user.getUsername());
-        emailService.sendEmail(mailMessage);
-
-        return ResponseEntity.ok("Verify email by the link sent on your email address");
-    }
+//	public ResponseEntity<?> saveUser3(User user) {
+//
+//        if (userRepository.existsByEmail(user.getEmail())) {
+//            return ResponseEntity.badRequest().body("Error: Email is already in use!");
+//        }
+//
+//        User response = userRepository.save(user);
+//        
+//        if (userRepository.existsByEmail(null)) {
+//            
+//			SimpleMailMessage msg = new SimpleMailMessage();
+//			//ResponseEntity<User> result = userService.getUser(user.getId());
+//			//System.out.println(">>>> Result "+ result);
+//	        msg.setTo(user.getEmail());
+//
+//	        msg.setSubject("Username Testing from Spring Boot");
+//	        msg.setText("To confirm your account, Your Username : "+user.getUsername());
+//	       // ResponseEntity<User>  = userService.saveUser(response);
+//	        
+//	        //return new ResponseEntity(result, HttpStatus.OK);
+//        }
+//		return new ResponseEntity(response, HttpStatus.OK);
+//        
+//        
+//        SimpleMailMessage mailMessage = new SimpleMailMessage();
+//        mailMessage.setTo(user.getEmail());
+//        mailMessage.setSubject("Complete Registration!");
+//        mailMessage.setText("To confirm your account, please click here : "
+//                +user.getUsername());
+//        emailService.sendEmail(mailMessage);
+//
+//        return ResponseEntity.ok("Verify email by the link sent on your email address");
+//    }
 
 }
 

@@ -1,5 +1,7 @@
 package com.example.demo.service.impl;
 
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,19 +54,25 @@ public class UserServiceImpl implements UserService {
 			return ResponseEntity.badRequest().body("Error: Email is already in use!");
 		}
 		//user.setUserPassword(passwordEncoder.encode(user.getUserPassword()));
-		String encodedPassword = this.passwordEncoder.encode(user.getUserPassword());
-		user.setUserPassword(encodedPassword);
+		
+		// Password encrypt
+		/*
+		  String encodedPassword = this.passwordEncoder.encode(user.getUserPassword());
+		  user.setUserPassword(encodedPassword);
+		 */
+		
 		userRepository.save(user);
 
 		ConfirmationToken confirmationToken = new ConfirmationToken(user);
 
 		confirmationTokenRepository.save(confirmationToken);
 
+		// Email sending
 		SimpleMailMessage mailMessage = new SimpleMailMessage();
 		mailMessage.setTo(user.getUserEmail());
 		mailMessage.setSubject("Complete Registration!");
 		mailMessage.setText("User Name: "+ user.getUserName()+",  Password: "+user.getUserPassword()+",  To confirm your account, please click here : "
-				+ "http://localhost:9001/confirm-account?token=" + confirmationToken.getConfirmationToken());
+				+ "http://192.168.1.106:9001/confirm-account?token=" + confirmationToken.getConfirmationToken());
 		emailService.sendEmail(mailMessage);
 
 		System.out.println("Confirmation Token: " + confirmationToken.getConfirmationToken());
@@ -105,7 +113,6 @@ public class UserServiceImpl implements UserService {
 		SimpleMailMessage mailMessage = new SimpleMailMessage();
 		mailMessage.setTo(user.getUserEmail());
 		mailMessage.setSubject("Complete Registration!");
-		//String encoded = new BCryptPasswordEncoder().encode(user.getUserPassword());
 		mailMessage.setText("User Name: "+ user.getUserName()+",  Password: "+user.getUserPassword());
 		emailService.sendEmail(mailMessage);
 		
@@ -136,11 +143,34 @@ public class UserServiceImpl implements UserService {
 	public User getLoginData(String userName, String userPassword) throws UserNotFoundException {
 		System.out.println("Login Credential "+userName+","+userPassword);
 		User login = userRepository.findByUserNameAndUserPassword(userName, userPassword);
+		//String decoded = new BCryptPasswordEncoder().matches(login.setUserPassword(userPassword), login.getUserPassword());
+
+//		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(16);
+//		String result = encoder.encode(login.getUserPassword());
+//		encoder.matches(login.setUserPassword(, result);
+//		&& encoder.matches(userPassword, login.getUserPassword())
+		
 		if(login != null && login.isEnabled()) {
 			return login;
 		}else {
 			System.out.println("Invalid Username and Password...!");
 			throw new UserNotFoundException("Invalid Username and Password...!");
 		}
+		
 	}
+	
+	// Reset Password 
+	@Override
+	public ResponseEntity<?> resetPassword(String email, User user) throws UserNotFoundException {
+
+		if (userRepository.existsByUserEmail(user.getUserEmail())) {
+			User user1 = userRepository.findByUserEmailIgnoreCase(email);
+			user1.setUserPassword(user.getUserPassword());
+			userRepository.save(user1);
+			return ResponseEntity.ok("Reset your Password");
+		}
+		return ResponseEntity.badRequest().body("Email not present.....!");
+		
+	}
+	
 }

@@ -15,6 +15,8 @@ public interface UserService {
     
     public User getLoginData(String userName, String userPassword)throws UserNotFoundException;
     
+    public ResponseEntity<?> resetPassword(String email, User user) throws UserNotFoundException;
+    
    
 
 }

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -72,4 +73,10 @@ public class UserController {
         smsService.sendSms(user);
     }
     
+    
+    
+    @PutMapping("/reset-password")
+	public ResponseEntity<?> updatepassword(@RequestBody User user, @RequestParam String email) throws UserNotFoundException {
+		return userService.resetPassword(email, user);
+	}
 }
